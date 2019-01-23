@@ -1,0 +1,16 @@
+{
+  "name": "hardpass",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "keywords": [],
+  "author": "Andrew Krawchyk <akrawchyk@gmail.com> (https://github.com/akrawchyk)",
+  "license": "MIT",
+  "devDependencies": {
+    "ava": "^1.1.0",
+    "prettier": "1.16.1"
+  }
+}
