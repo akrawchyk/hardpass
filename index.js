@@ -81,7 +81,7 @@ function digitCount(password) {
 }
 
 function specialCharCount(password) {
-  const re = /[" !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~"]/g
+  const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g
   return regexMatchCount(password, re)
 }
 
