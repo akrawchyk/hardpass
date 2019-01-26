@@ -57,6 +57,69 @@ these trade more network requests and more network time for more strict password
 https://haveibeenpwned.com/API/v2
 */
 
-module.exports = function (query) {
-  return false
+function regexMatchCount(password, re) {
+  let count = 0
+  while (re.exec(password)) {
+    count++
+  }
+
+  return count
+}
+
+function upperCaseCharCount(password) {
+  const re = /[A-Z]/g
+  return regexMatchCount(password, re)
+}
+
+function lowerCaseCharCount(password) {
+  const re = /[a-z]/g
+  return regexMatchCount(password, re)
+}
+
+function digitCount(password) {
+  const re = /\d/g
+  return regexMatchCount(password, re)
+}
+
+function specialCharCount(password) {
+  const re = /[^A-Za-z0-9]/g
+  return regexMatchCount(password, re)
+}
+
+function length(password) {
+  return password.length
+}
+
+function atLeast(count, check, password) {
+  return check(password) >= count
+}
+
+function atMost(count, check, password) {
+  return check(password) < count
+}
+
+function complexityChecks(password) {
+  const checks = [
+    atLeast(1, upperCaseCharCount, password),
+    atLeast(1, lowerCaseCharCount, password),
+    atLeast(1, digitCount, password),
+    atLeast(1, specialCharCount, password)
+  ]
+
+  return checks
+    .filter(Boolean)
+    .length
+}
+
+module.exports = function hardpass(password) {
+  const trimmed = password.trim()
+
+  const checks = [
+    atLeast(3, complexityChecks, trimmed),
+    atLeast(10, length, trimmed),
+    atMost(128, length, trimmed)
+    // TODO: add adjacent chars check
+  ]
+
+  return checks.every(Boolean)
 }
