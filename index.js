@@ -19,7 +19,9 @@ The password change mechanism should require a minimum level of complexity that 
   * at least 10 characters
   * at most 128 characters
   * not more than 2 identical characters in a row (e.g., 111 not allowed)
-Should we allow disabling of any of these checks? (imo NO.)
+Make sure that every character the user types in is actually included in the password. We've seen systems that truncate the password at a length shorter than what the user provided (e.g., truncated at 15 characters when they entered 20).
+As application's require more complex password policies, they need to be very clear about what these policies are. The required policy needs to be explicitly stated on the password change page
+If the new password doesn't comply with the complexity policy, the error message should describe EVERY complexity rule that the new password does not comply with, not just the 1st rule it doesn't comply with.
 
 2nd: extended dictionaries
 these trade larger bundle size for more strict password checking
@@ -59,10 +61,7 @@ https://haveibeenpwned.com/API/v2
 
 function regexMatchCount(password, re) {
   let count = 0
-  while (re.exec(password)) {
-    count++
-  }
-
+  while (re.exec(password)) count++
   return count
 }
 
@@ -86,6 +85,31 @@ function specialCharCount(password) {
   return regexMatchCount(password, re)
 }
 
+function repeatedIdenticalCharCount(password) {
+  const charOccurs = password.split('')
+    .reduce((occurs, char) => {
+      if (!occurs[char]) {
+        occurs[char] = 1;
+      } else {
+        occurs[char]++;
+      }
+      return occurs
+    }, {})
+
+  const chars = Object.entries(charOccurs)
+    .filter(([_char, occurrences]) => occurrences >= 3);
+
+  // search for at least 3 in a row for all chars occurring at least 3 times
+  const counts = chars.map(char => {
+    const re = new RegExp(`[${char}]{3,}`, 'g')
+    return regexMatchCount(password, re)
+  })
+
+  return counts
+    .filter(Boolean)
+    .length
+}
+
 function length(password) {
   return password.length
 }
@@ -95,7 +119,7 @@ function atLeast(count, check, password) {
 }
 
 function atMost(count, check, password) {
-  return check(password) < count
+  return check(password) <= count
 }
 
 function complexityChecks(password) {
@@ -112,13 +136,11 @@ function complexityChecks(password) {
 }
 
 module.exports = function hardpass(password) {
-  const trimmed = password.trim()
-
   const checks = [
-    atLeast(3, complexityChecks, trimmed),
-    atLeast(10, length, trimmed),
-    atMost(128, length, trimmed)
-    // TODO: add adjacent chars check
+    atLeast(3, complexityChecks, password),
+    atLeast(10, length, password),
+    atMost(128, length, password),
+    atMost(0, repeatedIdenticalCharCount, password)
   ]
 
   return checks.every(Boolean)
