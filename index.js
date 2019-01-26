@@ -97,7 +97,8 @@ function repeatedIdenticalCharCount(password) {
     }, {})
 
   const chars = Object.entries(charOccurs)
-    .filter(([_char, occurrences]) => occurrences >= 3);
+    .filter(([_char, occurrences]) => occurrences >= 3)
+    .map(([char, _occurrences]) => char);
 
   // search for at least 3 in a row for all chars occurring at least 3 times
   const counts = chars.map(char => {
