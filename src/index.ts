@@ -59,7 +59,7 @@ these trade more network requests and more network time for more strict password
 https://haveibeenpwned.com/API/v2
 */
 
-type CharMode = { [key: string]: number }
+type CharsOccurrences = { [key: string]: number };
 
 function regexMatchCount(password: string, re: RegExp): number {
   let count = 0;
@@ -88,14 +88,16 @@ function specialCharCount(password: string): number {
 }
 
 function repeatedIdenticalCharCount(password: string): number {
-  const charOccurs = password.split("").reduce((occurs: CharMode, char: string) => {
-    if (!occurs[char]) {
-      occurs[char] = 1;
-    } else {
-      occurs[char]++;
-    }
-    return occurs;
-  }, {});
+  const charOccurs = password
+    .split("")
+    .reduce((occurs: CharsOccurrences, char: string) => {
+      if (!occurs[char]) {
+        occurs[char] = 1;
+      } else {
+        occurs[char]++;
+      }
+      return occurs;
+    }, {});
 
   const chars = Object.entries(charOccurs)
     .filter(([_char, occurrences]) => occurrences >= 3)
@@ -142,4 +144,4 @@ export default function hardpass(password: string): boolean {
   ];
 
   return checks.every(Boolean);
-};
+}

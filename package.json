@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && ava"
+    "fix": "prettier src/*.ts test/*.ts --write",
+    "test": "ava"
   },
   "keywords": [],
   "author": "Andrew Krawchyk <akrawchyk@gmail.com> (https://github.com/akrawchyk)",

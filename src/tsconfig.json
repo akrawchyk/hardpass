@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outFile": "hardpass.js",
+    "composite": true
+  },
+  "references":[],
+  "files": [
+    "index.ts"
+  ]
+}
