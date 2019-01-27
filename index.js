@@ -60,41 +60,40 @@ https://haveibeenpwned.com/API/v2
 */
 
 function regexMatchCount(password, re) {
-  let count = 0
-  while (re.exec(password)) count++
-  return count
+  let count = 0;
+  while (re.exec(password)) count++;
+  return count;
 }
 
 function upperCaseCharCount(password) {
-  const re = /[A-Z]/g
-  return regexMatchCount(password, re)
+  const re = /[A-Z]/g;
+  return regexMatchCount(password, re);
 }
 
 function lowerCaseCharCount(password) {
-  const re = /[a-z]/g
-  return regexMatchCount(password, re)
+  const re = /[a-z]/g;
+  return regexMatchCount(password, re);
 }
 
 function digitCount(password) {
-  const re = /\d/g
-  return regexMatchCount(password, re)
+  const re = /\d/g;
+  return regexMatchCount(password, re);
 }
 
 function specialCharCount(password) {
-  const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g
-  return regexMatchCount(password, re)
+  const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
+  return regexMatchCount(password, re);
 }
 
 function repeatedIdenticalCharCount(password) {
-  const charOccurs = password.split('')
-    .reduce((occurs, char) => {
-      if (!occurs[char]) {
-        occurs[char] = 1;
-      } else {
-        occurs[char]++;
-      }
-      return occurs
-    }, {})
+  const charOccurs = password.split("").reduce((occurs, char) => {
+    if (!occurs[char]) {
+      occurs[char] = 1;
+    } else {
+      occurs[char]++;
+    }
+    return occurs;
+  }, {});
 
   const chars = Object.entries(charOccurs)
     .filter(([_char, occurrences]) => occurrences >= 3)
@@ -102,25 +101,23 @@ function repeatedIdenticalCharCount(password) {
 
   // search for at least 3 in a row for all chars occurring at least 3 times
   const counts = chars.map(char => {
-    const re = new RegExp(`[${char}]{3,}`, 'g')
-    return regexMatchCount(password, re)
-  })
+    const re = new RegExp(`[${char}]{3,}`, "g");
+    return regexMatchCount(password, re);
+  });
 
-  return counts
-    .filter(Boolean)
-    .length
+  return counts.filter(Boolean).length;
 }
 
 function length(password) {
-  return password.length
+  return password.length;
 }
 
 function atLeast(count, check, password) {
-  return check(password) >= count
+  return check(password) >= count;
 }
 
 function atMost(count, check, password) {
-  return check(password) <= count
+  return check(password) <= count;
 }
 
 function complexityChecks(password) {
@@ -129,11 +126,9 @@ function complexityChecks(password) {
     atLeast(1, lowerCaseCharCount, password),
     atLeast(1, digitCount, password),
     atLeast(1, specialCharCount, password)
-  ]
+  ];
 
-  return checks
-    .filter(Boolean)
-    .length
+  return checks.filter(Boolean).length;
 }
 
 module.exports = function hardpass(password) {
@@ -142,7 +137,7 @@ module.exports = function hardpass(password) {
     atLeast(10, length, password),
     atMost(128, length, password),
     atMost(0, repeatedIdenticalCharCount, password)
-  ]
+  ];
 
-  return checks.every(Boolean)
-}
+  return checks.every(Boolean);
+};
