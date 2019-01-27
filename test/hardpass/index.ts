@@ -1,5 +1,5 @@
 import test, { ExecutionContext } from "ava";
-import hardpass from "../src/index";
+import hardpass from "../../src/hardpass";
 
 const isStrong = (t: ExecutionContext, password: string, expected: boolean) => {
   t.is(hardpass(password), expected)
