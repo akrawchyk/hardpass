@@ -2,6 +2,7 @@
   "name": "hardpass",
   "version": "0.0.1",
   "description": "Lightweight password strength checker that enforces a strong password policy.",
+  "homepage": "https://github.com/akrawchyk/hardpass",
   "main": "dist/hardpass.umd.js",
   "module": "dist/hardpass.esm.js",
   "typings": "dist/hardpass.d.ts",
@@ -11,6 +12,10 @@
     "test": "ava",
     "prepare": "npm run build"
   },
+  "files" :[
+    "dist/*.js",
+    "dist/*.d.ts"
+  ],
   "keywords": [],
   "author": "Andrew Krawchyk <akrawchyk@gmail.com> (https://github.com/akrawchyk)",
   "license": "MIT",
