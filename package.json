@@ -2,7 +2,8 @@
   "name": "hardpass",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index",
+  "types": "lib/index",
   "scripts": {
     "fix": "prettier src/*.ts test/*.ts --write",
     "test": "ava"
@@ -13,6 +14,8 @@
   "devDependencies": {
     "ava": "^1.1.0",
     "prettier": "1.16.1",
+    "rollup": "^1.1.2",
+    "rollup-plugin-typescript": "^1.0.0",
     "ts-node": "^8.0.2",
     "tslib": "^1.9.3",
     "typescript": "^3.2.4"

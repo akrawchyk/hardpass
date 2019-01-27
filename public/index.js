@@ -58,90 +58,81 @@ these trade more network requests and more network time for more strict password
 3rd: various api services:
 https://haveibeenpwned.com/API/v2
 */
-
-type CharsOccurrences = { [key: string]: number };
-
-function regexMatchCount(password: string, re: RegExp): number {
-  let count = 0;
-  while (re.exec(password)) count++;
-  return count;
+import * as tslib_1 from "tslib";
+function regexMatchCount(password, re) {
+    var count = 0;
+    while (re.exec(password))
+        count++;
+    return count;
 }
-
-function upperCaseCharCount(password: string): number {
-  const re = /[A-Z]/g;
-  return regexMatchCount(password, re);
-}
-
-function lowerCaseCharCount(password: string): number {
-  const re = /[a-z]/g;
-  return regexMatchCount(password, re);
-}
-
-function digitCount(password: string): number {
-  const re = /\d/g;
-  return regexMatchCount(password, re);
-}
-
-function specialCharCount(password: string): number {
-  const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
-  return regexMatchCount(password, re);
-}
-
-function repeatedIdenticalCharCount(password: string): number {
-  const charOccurs = password
-    .split("")
-    .reduce((occurs: CharsOccurrences, char: string): CharsOccurrences => {
-      if (!occurs[char]) {
-        occurs[char] = 1;
-      } else {
-        occurs[char]++;
-      }
-      return occurs;
-    }, {});
-
-  const chars = Object.entries(charOccurs)
-    .filter(([_char, occurrences]) => occurrences >= 3)
-    .map(([char, _occurrences]) => char);
-
-  // search for at least 3 in a row for all chars occurring at least 3 times
-  const counts = chars.map(char => {
-    const re = new RegExp(`[${char}]{3,}`, "g");
+function upperCaseCharCount(password) {
+    var re = /[A-Z]/g;
     return regexMatchCount(password, re);
-  });
-
-  return counts.filter(Boolean).length;
 }
-
-function length(password: string): number {
-  return password.length;
+function lowerCaseCharCount(password) {
+    var re = /[a-z]/g;
+    return regexMatchCount(password, re);
 }
-
-function atLeast(count: number, check: Function, password: string): boolean {
-  return check(password) >= count;
+function digitCount(password) {
+    var re = /\d/g;
+    return regexMatchCount(password, re);
 }
-
-function atMost(count: number, check: Function, password: string): boolean {
-  return check(password) <= count;
+function specialCharCount(password) {
+    var re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
+    return regexMatchCount(password, re);
 }
-
-function complexityChecks(password: string): number {
-  const checks = [
-    atLeast(1, upperCaseCharCount, password),
-    atLeast(1, lowerCaseCharCount, password),
-    atLeast(1, digitCount, password),
-    atLeast(1, specialCharCount, password)
-  ];
-
-  return checks.filter(Boolean).length;
+function repeatedIdenticalCharCount(password) {
+    var charOccurs = password
+        .split("")
+        .reduce(function (occurs, char) {
+        if (!occurs[char]) {
+            occurs[char] = 1;
+        }
+        else {
+            occurs[char]++;
+        }
+        return occurs;
+    }, {});
+    var chars = Object.entries(charOccurs)
+        .filter(function (_a) {
+        var _b = tslib_1.__read(_a, 2), _char = _b[0], occurrences = _b[1];
+        return occurrences >= 3;
+    })
+        .map(function (_a) {
+        var _b = tslib_1.__read(_a, 2), char = _b[0], _occurrences = _b[1];
+        return char;
+    });
+    // search for at least 3 in a row for all chars occurring at least 3 times
+    var counts = chars.map(function (char) {
+        var re = new RegExp("[" + char + "]{3,}", "g");
+        return regexMatchCount(password, re);
+    });
+    return counts.filter(Boolean).length;
 }
-
-export default function hardpass(password: string): boolean {
-  const checks = [
-    atLeast(3, complexityChecks, password),
-    atLeast(10, length, password),
-    atMost(128, length, password),
-    atMost(0, repeatedIdenticalCharCount, password)
-  ];
-
-  return checks.every(Boolean);
+function length(password) {
+    return password.length;
+}
+function atLeast(count, check, password) {
+    return check(password) >= count;
+}
+function atMost(count, check, password) {
+    return check(password) <= count;
+}
+function complexityChecks(password) {
+    var checks = [
+        atLeast(1, upperCaseCharCount, password),
+        atLeast(1, lowerCaseCharCount, password),
+        atLeast(1, digitCount, password),
+        atLeast(1, specialCharCount, password)
+    ];
+    return checks.filter(Boolean).length;
+}
+export default function hardpass(password) {
+    var checks = [
+        atLeast(3, complexityChecks, password),
+        atLeast(10, length, password),
+        atMost(128, length, password),
+        atMost(0, repeatedIdenticalCharCount, password)
+    ];
+    return checks.every(Boolean);
 }
