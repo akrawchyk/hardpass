@@ -21,10 +21,13 @@ Inspired by https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement
 
 ### Planned
 
-* If the new password doesn't comply with the complexity policy, the error message should describe EVERY complexity rule that the new password does not comply with, not just the 1st rule it doesn't comply with.
-* Passphrases shorter than 20 characters are usually considered weak if they only consist of lower case Latin characters.
 * Password Topologies
   * Ban commonly used password topologies
+* If the new password doesn't comply with the complexity policy, the error message should describe EVERY complexity rule that the new password does not comply with, not just the 1st rule it doesn't comply with.
+
+### Considering
+
+* Passphrases shorter than 20 characters are usually considered weak if they only consist of lower case Latin characters.
 
 ## Usage
 

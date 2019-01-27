@@ -1,5 +1,5 @@
 import test from "ava";
-import hardpass from "./index.js";
+import hardpass from "../src/index";
 
 test("short password", t => {
   t.is(hardpass('i"PSTg,98'), false);

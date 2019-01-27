@@ -59,34 +59,36 @@ these trade more network requests and more network time for more strict password
 https://haveibeenpwned.com/API/v2
 */
 
-function regexMatchCount(password, re) {
+type CharMode = { [key: string]: number }
+
+function regexMatchCount(password: string, re: RegExp): number {
   let count = 0;
   while (re.exec(password)) count++;
   return count;
 }
 
-function upperCaseCharCount(password) {
+function upperCaseCharCount(password: string): number {
   const re = /[A-Z]/g;
   return regexMatchCount(password, re);
 }
 
-function lowerCaseCharCount(password) {
+function lowerCaseCharCount(password: string): number {
   const re = /[a-z]/g;
   return regexMatchCount(password, re);
 }
 
-function digitCount(password) {
+function digitCount(password: string): number {
   const re = /\d/g;
   return regexMatchCount(password, re);
 }
 
-function specialCharCount(password) {
+function specialCharCount(password: string): number {
   const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
   return regexMatchCount(password, re);
 }
 
-function repeatedIdenticalCharCount(password) {
-  const charOccurs = password.split("").reduce((occurs, char) => {
+function repeatedIdenticalCharCount(password: string): number {
+  const charOccurs = password.split("").reduce((occurs: CharMode, char: string) => {
     if (!occurs[char]) {
       occurs[char] = 1;
     } else {
@@ -108,19 +110,19 @@ function repeatedIdenticalCharCount(password) {
   return counts.filter(Boolean).length;
 }
 
-function length(password) {
+function length(password: string): number {
   return password.length;
 }
 
-function atLeast(count, check, password) {
+function atLeast(count: number, check: Function, password: string): boolean {
   return check(password) >= count;
 }
 
-function atMost(count, check, password) {
+function atMost(count: number, check: Function, password: string): boolean {
   return check(password) <= count;
 }
 
-function complexityChecks(password) {
+function complexityChecks(password: string): number {
   const checks = [
     atLeast(1, upperCaseCharCount, password),
     atLeast(1, lowerCaseCharCount, password),
@@ -131,7 +133,7 @@ function complexityChecks(password) {
   return checks.filter(Boolean).length;
 }
 
-module.exports = function hardpass(password) {
+export default function hardpass(password: string): boolean {
   const checks = [
     atLeast(3, complexityChecks, password),
     atLeast(10, length, password),
