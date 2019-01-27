@@ -58,87 +58,90 @@ these trade more network requests and more network time for more strict password
 3rd: various api services:
 https://haveibeenpwned.com/API/v2
 */
-(function (factory) {
-    if (typeof module === "object" && typeof module.exports === "object") {
-        var v = factory(require, exports);
-        if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
-    }
-})(function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function regexMatchCount(password, re) {
-        let count = 0;
-        while (re.exec(password))
-            count++;
-        return count;
-    }
-    function upperCaseCharCount(password) {
-        const re = /[A-Z]/g;
-        return regexMatchCount(password, re);
-    }
-    function lowerCaseCharCount(password) {
-        const re = /[a-z]/g;
-        return regexMatchCount(password, re);
-    }
-    function digitCount(password) {
-        const re = /\d/g;
-        return regexMatchCount(password, re);
-    }
-    function specialCharCount(password) {
-        const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
-        return regexMatchCount(password, re);
-    }
-    function repeatedIdenticalCharCount(password) {
-        const charOccurs = password
-            .split("")
-            .reduce((occurs, char) => {
-            if (!occurs[char]) {
-                occurs[char] = 1;
-            }
-            else {
-                occurs[char]++;
-            }
-            return occurs;
-        }, {});
-        const chars = Object.entries(charOccurs)
-            .filter(([_char, occurrences]) => occurrences >= 3)
-            .map(([char, _occurrences]) => char);
-        // search for at least 3 in a row for all chars occurring at least 3 times
-        const counts = chars.map(char => {
-            const re = new RegExp(`[${char}]{3,}`, "g");
-            return regexMatchCount(password, re);
-        });
-        return counts.filter(Boolean).length;
-    }
-    function length(password) {
-        return password.length;
-    }
-    function atLeast(count, check, password) {
-        return check(password) >= count;
-    }
-    function atMost(count, check, password) {
-        return check(password) <= count;
-    }
-    function complexityChecks(password) {
-        const checks = [
-            atLeast(1, upperCaseCharCount, password),
-            atLeast(1, lowerCaseCharCount, password),
-            atLeast(1, digitCount, password),
-            atLeast(1, specialCharCount, password)
-        ];
-        return checks.filter(Boolean).length;
-    }
-    function hardpass(password) {
-        const checks = [
-            atLeast(3, complexityChecks, password),
-            atLeast(10, length, password),
-            atMost(128, length, password),
-            atMost(0, repeatedIdenticalCharCount, password)
-        ];
-        return checks.every(Boolean);
-    }
-    exports.default = hardpass;
-});
+
+import { CharsOccurrences } from './types'
+
+function regexMatchCount(password: string, re: RegExp): number {
+  let count = 0;
+  while (re.exec(password)) count++;
+  return count;
+}
+
+function upperCaseCharCount(password: string): number {
+  const re = /[A-Z]/g;
+  return regexMatchCount(password, re);
+}
+
+function lowerCaseCharCount(password: string): number {
+  const re = /[a-z]/g;
+  return regexMatchCount(password, re);
+}
+
+function digitCount(password: string): number {
+  const re = /\d/g;
+  return regexMatchCount(password, re);
+}
+
+function specialCharCount(password: string): number {
+  const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
+  return regexMatchCount(password, re);
+}
+
+function repeatedIdenticalCharCount(password: string): number {
+  const charOccurs = password
+    .split("")
+    .reduce((occurs: CharsOccurrences, char: string): CharsOccurrences => {
+      if (!occurs[char]) {
+        occurs[char] = 1;
+      } else {
+        occurs[char]++;
+      }
+      return occurs;
+    }, {});
+
+  const chars = Object.entries(charOccurs)
+    .filter(([_char, occurrences]) => occurrences >= 3)
+    .map(([char, _occurrences]) => char);
+
+  // search for at least 3 in a row for all chars occurring at least 3 times
+  const counts = chars.map(char => {
+    const re = new RegExp(`[${char}]{3,}`, "g");
+    return regexMatchCount(password, re);
+  });
+
+  return counts.filter(Boolean).length;
+}
+
+function length(password: string): number {
+  return password.length;
+}
+
+function atLeast(count: number, check: Function, password: string): boolean {
+  return check(password) >= count;
+}
+
+function atMost(count: number, check: Function, password: string): boolean {
+  return check(password) <= count;
+}
+
+function complexityChecks(password: string): number {
+  const checks = [
+    atLeast(1, upperCaseCharCount, password),
+    atLeast(1, lowerCaseCharCount, password),
+    atLeast(1, digitCount, password),
+    atLeast(1, specialCharCount, password)
+  ];
+
+  return checks.filter(Boolean).length;
+}
+
+export default function hardpass(password: string): boolean {
+  const checks = [
+    atLeast(3, complexityChecks, password),
+    atLeast(10, length, password),
+    atMost(128, length, password),
+    atMost(0, repeatedIdenticalCharCount, password)
+  ];
+
+  return checks.every(Boolean);
+}

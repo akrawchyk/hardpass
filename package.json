@@ -1,12 +1,14 @@
 {
   "name": "hardpass",
   "version": "0.0.1",
-  "description": "",
-  "main": "lib/index",
-  "types": "lib/index",
+  "description": "Lightweight password strength checker that enforces a strong password policy.",
+  "main": "dist/hardpass.umd.js",
+  "module": "dist/hardpass.esm.js",
   "scripts": {
+    "build": "shx rm -rf dist && git rev-parse HEAD > .commithash && rollup -c && shx cp src/hardpass/types.d.ts dist/hardpass.d.ts",
     "fix": "prettier src/*.ts test/*.ts --write",
-    "test": "ava"
+    "test": "ava",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "Andrew Krawchyk <akrawchyk@gmail.com> (https://github.com/akrawchyk)",
@@ -15,7 +17,10 @@
     "ava": "^1.1.0",
     "prettier": "1.16.1",
     "rollup": "^1.1.2",
+    "rollup-plugin-alias": "^1.5.1",
+    "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-typescript": "^1.0.0",
+    "shx": "^0.3.2",
     "ts-node": "^8.0.2",
     "tslib": "^1.9.3",
     "typescript": "^3.2.4"
