@@ -105,6 +105,13 @@ function repeatedIdenticalCharCount(password: string): number {
 
   // search for at least 3 in a row for all chars occurring at least 3 times
   const counts = chars.map(char => {
+    switch (char) {
+      case '\\':
+      case ']':
+        char = `\${char}` // escape char in regex
+      break;
+    }
+
     const re = new RegExp(`[${char}]{3,}`, "g");
     return regexMatchCount(password, re);
   });
