@@ -1,12 +1,44 @@
-# hardpass
+# hardpass [![npm][npm-image]][npm-url]
+
+[npm-image]: https://img.shields.io/npm/v/hardpass.svg
+[npm-url]: https://npmjs.org/package/hardpass
 
 Lightweight password strength checker that enforces a strong password policy.
 
-## Policies
+## features
 
-Inspired by https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls.
+* Small bundle size, 3KB
 
-### Implemented
+## install
+
+```shell
+npm install hardpass --save
+
+# or with yarn
+
+yarn add hardpass
+```
+
+## usage
+
+```js
+const hardpass = require('hardpass');
+
+hardpass('qwerty123');
+//=> false
+
+hardpass('Cm;cF*1f5L');
+//=> true
+```
+
+
+## policies
+
+Inspired by [OWASP Proper Password Strenth Controls][npm-url].
+
+[owasp-url]: https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls
+
+### implemented
 
 * Password Length
   * at least 10 characters
@@ -19,37 +51,28 @@ Inspired by https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement
     * at least 1 special character (punctuation) — ` !"#$%&'()*+,-./:;<=>?@[\\\]^_\`{|}~`
   * not more than 2 identical characters in a row (e.g., 111 not allowed)
 
-### Planned
+### planned
 
 * Password Topologies
   * Ban commonly used password topologies
 * If the new password doesn't comply with the complexity policy, the error message should describe EVERY complexity rule that the new password does not comply with, not just the 1st rule it doesn't comply with.
 
-### Considering
+### considering
 
 * Passphrases shorter than 20 characters are usually considered weak if they only consist of lower case Latin characters.
 
-## Usage
+## motivation
 
-To install hardpass, run:
+> zxcvbn.js bundled and minified is about 400kB gzipped or 820kB uncompressed, most of which is dictionaries.
 
-```console
-npm install hardpass --save
-# or with yarn
-yarn add hardpass
-```
+We can eliminate the majority of weak passwords by enforcing baseline recommended
+security policies for strong passwords.
 
-```js
-const hardpass = require('hardpass');
+We can prune common password dictionaries to reduce their footprint as well, and
+provide different configurations for file-size tradeoffs.
 
-hardpass('qwerty123')
-//=> false
-```
+## license
 
-## Docs
+[MIT © Andrew Krawchyk][license-url]
 
-TODO
-
-## License
-
-[MIT © Andrew Krawchyk](https://github.com/akrawchyk/hardpass/blob/master/LICENSE.txt)
+[license-url]: https://github.com/akrawchyk/hardpass/blob/master/LICENSE.txt
