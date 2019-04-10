@@ -91,15 +91,12 @@ function provideFeedback(password: string): HardpassFeedback {
     withSuggestion(() => atLeast(1, digitCount, password), 'Try adding at least 1 digit'),
     withSuggestion(() => atLeast(1, specialCharCount, password), 'Try adding at least 1 special characater')
   ].filter(Boolean);
+  // prettier-ignore
   const additionalSuggestions = [
     withSuggestion(() => atLeast(10, length, password), 'Must be at least 10 characters long'),
     withSuggestion(() => atMost(128, length, password), 'Can only be at most 128 characters long'),
-    withSuggestion(
-      () => atMost(0, repeatedIdenticalCharCount, password),
-      'Cannot have any repeated identical characters'
-    )
+    withSuggestion(() => atMost(0, repeatedIdenticalCharCount, password), 'Cannot have any repeated identical characters')
   ].filter(Boolean);
-  // prettier-ignore-end
   let suggestions: Array<string> = [];
   let warnings: Array<string> = [];
 
@@ -131,7 +128,7 @@ export default function hardpass(password: string): HardpassOutput {
 
   // same as zxcvbn
   if (score <= 2) {
-    output.feedback = feedback
+    output.feedback = feedback;
   }
 
   return output;
