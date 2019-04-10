@@ -88,20 +88,12 @@ function withSuggestion(check: Function, suggestion = 'suggestion'): string {
 }
 
 function provideFeedback(password: string): HardpassFeedback {
+  // prettier-ignore
   const complexitySuggestions = [
-    withSuggestion(
-      () => atLeast(1, upperCaseCharCount, password),
-      'Try adding at least 1 upper case character'
-    ),
-    withSuggestion(
-      () => atLeast(1, lowerCaseCharCount, password),
-      'Try adding at least 1 lower case character'
-    ),
+    withSuggestion(() => atLeast(1, upperCaseCharCount, password), 'Try adding at least 1 upper case character'),
+    withSuggestion(() => atLeast(1, lowerCaseCharCount, password), 'Try adding at least 1 lower case character'),
     withSuggestion(() => atLeast(1, digitCount, password), 'Try adding at least 1 digit'),
-    withSuggestion(
-      () => atLeast(1, specialCharCount, password),
-      'Try adding at least 1 special characater'
-    )
+    withSuggestion(() => atLeast(1, specialCharCount, password), 'Try adding at least 1 special characater')
   ].filter(Boolean);
   const additionalSuggestions = [
     withSuggestion(() => atLeast(10, length, password), 'Must be at least 10 characters long'),
@@ -111,6 +103,7 @@ function provideFeedback(password: string): HardpassFeedback {
       'Cannot have any repeated identical characters'
     )
   ].filter(Boolean);
+  // prettier-ignore-end
   let suggestions: Array<string> = [];
   let warnings: Array<string> = [];
 
@@ -138,9 +131,12 @@ export default function hardpass(password: string): HardpassOutput {
   const feedback = provideFeedback(password);
   const isStrong = !feedback.warning;
   const score = isStrong ? 4 : 0; // we're either weak:0 or strong:4
+  const output = { score };
 
-  return {
-    score,
-    feedback
-  };
+  // same as zxcvbn
+  if (score <= 2) {
+    Object.assign(output, feedback);
+  }
+
+  return output;
 }

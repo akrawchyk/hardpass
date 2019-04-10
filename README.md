@@ -7,7 +7,11 @@ Lightweight password strength checker that enforces a strong password policy.
 
 ## features
 
-* Small bundle size, 3KB
+* >99% smaller than [zxcvbn][zxcvbn-link], just 2.2KB gzipped, 6.6KB uncompressed.
+* Feedback messages for weak passwords
+* Familiar API
+
+[zxcvbn-link]: https://github.com/dropbox/zxcvbn
 
 ## install
 
@@ -25,14 +29,29 @@ yarn add hardpass
 const hardpass = require('hardpass');
 
 hardpass('qwerty123');
-//=> false
+/*
+{
+  score: 0,
+  feedback: {
+    warning: 'Not complex enough',
+    suggestions: [
+      'Try adding at least 1 upper case character',
+      'Try adding at least 1 special character',
+      'Must be at least 10 characters long'
+    ]
+  }
+}
+*/
 
 hardpass('Cm;cF*1f5L');
-//=> true
+/*
+{
+  score: 4
+}
+*/
 ```
 
-
-## policies
+## policy
 
 Inspired by [OWASP Proper Password Strenth Controls][owasp-url].
 
@@ -50,26 +69,26 @@ Inspired by [OWASP Proper Password Strenth Controls][owasp-url].
     * at least 1 digit (0-9)
     * at least 1 special character (punctuation) — ` !"#$%&'()*+,-./:;<=>?@[\\\]^_\`{|}~`
   * not more than 2 identical characters in a row (e.g., 111 not allowed)
+* Feedback messages
 
 ### planned
 
 * Password Topologies
   * Ban commonly used password topologies
-* If the new password doesn't comply with the complexity policy, the error message should describe EVERY complexity rule that the new password does not comply with, not just the 1st rule it doesn't comply with.
-
-### considering
-
-* Passphrases shorter than 20 characters are usually considered weak if they only consist of lower case Latin characters.
+* Configurable feedback messages
+* Configurable password dictionaries
 
 ## motivation
 
-> zxcvbn.js bundled and minified is about 400kB gzipped or 820kB uncompressed, most of which is dictionaries.
+> zxcvbn.js bundled and minified is about 400kB gzipped or 820kB uncompressed, most of which is dictionaries.[link][zxcvbn-quote-url]
 
 We can eliminate the majority of weak passwords by enforcing baseline recommended
 security policies for strong passwords.
 
 We can prune common password dictionaries to reduce their footprint as well, and
 provide different configurations for file-size tradeoffs.
+
+[zxcvbn-quote-url]: https://github.com/dropbox/zxcvbn#script-load-latency
 
 ## license
 

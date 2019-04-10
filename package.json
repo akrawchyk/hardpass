@@ -8,7 +8,7 @@
   "typings": "dist/hardpass.d.ts",
   "scripts": {
     "build": "shx rm -rf dist && git rev-parse HEAD > .commithash && rollup -c && shx cp src/hardpass/types.d.ts dist/hardpass.d.ts",
-    "fix": "prettier src/*.ts test/*.ts --write",
+    "fix": "prettier src/**/*.ts test/**/*.ts --write",
     "test": "ava",
     "prepare": "npm run build"
   },

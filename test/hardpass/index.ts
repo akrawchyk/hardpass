@@ -22,11 +22,7 @@ function weakOutput(suggestions: string | Array<string>, warning = 'Not complex 
 
 function strongOutput() {
   return {
-    score: 4,
-    feedback: {
-      warning: '',
-      suggestions: []
-    }
+    score: 4
   };
 }
 

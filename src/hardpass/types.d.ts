@@ -7,7 +7,7 @@ export interface HardpassFeedback {
 
 export interface HardpassOutput {
   score: number;
-  feedback: HardpassFeedback;
+  feedback?: HardpassFeedback;
 }
 
 export function hardpass(password: string): boolean;
