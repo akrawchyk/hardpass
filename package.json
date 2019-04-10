@@ -1,6 +1,6 @@
 {
   "name": "hardpass",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Lightweight password strength checker that enforces a strong password policy.",
   "homepage": "https://github.com/akrawchyk/hardpass",
   "main": "dist/hardpass.umd.js",
