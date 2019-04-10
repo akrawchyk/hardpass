@@ -6,24 +6,20 @@ function regexMatchCount(password: string, re: RegExp): number {
   return count;
 }
 
-const upperCaseRe = /[A-Z]/g;
-function upperCaseCharCount(password: string): number {
-  return regexMatchCount(password, upperCaseRe);
+function upperCaseCharCount(password: string, re = /[A-Z]/g): number {
+  return regexMatchCount(password, re);
 }
 
-const lowerCaseRe = /[a-z]/g;
-function lowerCaseCharCount(password: string): number {
-  return regexMatchCount(password, lowerCaseRe);
+function lowerCaseCharCount(password: string, re = /[a-z]/g): number {
+  return regexMatchCount(password, re);
 }
 
-const digitRe = /\d/g;
-function digitCount(password: string): number {
-  return regexMatchCount(password, digitRe);
+function digitCount(password: string, re = /\d/g): number {
+  return regexMatchCount(password, re);
 }
 
-const specialRe = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
-function specialCharCount(password: string): number {
-  return regexMatchCount(password, specialRe);
+function specialCharCount(password: string, re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g): number {
+  return regexMatchCount(password, re);
 }
 
 function countCharsOccurrences(password: string): CharsOccurrences {
@@ -131,11 +127,11 @@ export default function hardpass(password: string): HardpassOutput {
   const feedback = provideFeedback(password);
   const isStrong = !feedback.warning;
   const score = isStrong ? 4 : 0; // we're either weak:0 or strong:4
-  const output = { score };
+  const output = { score } as HardpassOutput;
 
   // same as zxcvbn
   if (score <= 2) {
-    Object.assign(output, feedback);
+    output.feedback = feedback
   }
 
   return output;
