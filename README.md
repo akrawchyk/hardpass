@@ -7,11 +7,9 @@ Lightweight password strength checker that enforces a strong password policy.
 
 ## features
 
-* >99% smaller than [zxcvbn][zxcvbn-link], just 2.2KB gzipped, 6.6KB uncompressed.
+* [\>99% smaller than zxcvbn][#motivation], just 2.2K gzipped, 6.8K uncompressed.
 * Feedback messages for weak passwords
 * Familiar API
-
-[zxcvbn-link]: https://github.com/dropbox/zxcvbn
 
 ## install
 
@@ -80,7 +78,7 @@ Inspired by [OWASP Proper Password Strenth Controls][owasp-url].
 
 ## motivation
 
-> zxcvbn.js bundled and minified is about 400kB gzipped or 820kB uncompressed, most of which is dictionaries.[link][zxcvbn-quote-url]
+> zxcvbn.js bundled and minified is about 400kB gzipped or 820kB uncompressed, most of which is dictionaries.<sup>\[[link][zxcvbn-quote-url]\]</sup>
 
 We can eliminate the majority of weak passwords by enforcing baseline recommended
 security policies for strong passwords.
