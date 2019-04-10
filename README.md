@@ -7,7 +7,7 @@ Lightweight password strength checker that enforces a strong password policy.
 
 ## features
 
-* [\>99% smaller than zxcvbn](#motivation), just 2.2K gzipped, 6.8K uncompressed.
+* [\>99% smaller than zxcvbn](#motivation), just 2.2K gzipped, 6.7K uncompressed.
 * Feedback messages for weak passwords
 * Familiar API
 
