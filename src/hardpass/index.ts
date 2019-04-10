@@ -59,7 +59,7 @@ these trade more network requests and more network time for more strict password
 https://haveibeenpwned.com/API/v2
 */
 
-import { CharsOccurrences, HardpassOutput } from './types'
+import { CharsOccurrences, HardpassFeedback, HardpassOutput } from './types'
 
 function regexMatchCount(password: string, re: RegExp): number {
   let count = 0;
@@ -67,28 +67,28 @@ function regexMatchCount(password: string, re: RegExp): number {
   return count;
 }
 
+const upperCaseRe = /[A-Z]/g;
 function upperCaseCharCount(password: string): number {
-  const re = /[A-Z]/g;
-  return regexMatchCount(password, re);
+  return regexMatchCount(password, upperCaseRe);
 }
 
+const lowerCaseRe = /[a-z]/g;
 function lowerCaseCharCount(password: string): number {
-  const re = /[a-z]/g;
-  return regexMatchCount(password, re);
+  return regexMatchCount(password, lowerCaseRe);
 }
 
+const digitRe = /\d/g;
 function digitCount(password: string): number {
-  const re = /\d/g;
-  return regexMatchCount(password, re);
+  return regexMatchCount(password, digitRe);
 }
 
+const specialRe = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
 function specialCharCount(password: string): number {
-  const re = /[ !"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]/g;
-  return regexMatchCount(password, re);
+  return regexMatchCount(password, specialRe);
 }
 
-function repeatedIdenticalCharCount(password: string, minOccurs = 3): number {
-  const charsOccurs = password
+function countCharsOccurrences(password: string): CharsOccurrences {
+  return password
     .split("")
     .reduce((occurs: CharsOccurrences, char: string): CharsOccurrences => {
       if (!occurs[char]) {
@@ -98,24 +98,15 @@ function repeatedIdenticalCharCount(password: string, minOccurs = 3): number {
       }
       return occurs;
     }, {});
+}
 
-  const chars = Object.entries(charsOccurs)
-    .filter(([_char, occurrences]) => occurrences >= minOccurs)
+function repeatedIdenticalCharCount(password: string, maxRepeatedAllowed = 2): number {
+  const charsOccurs = countCharsOccurrences(password)
+  const repeatedChars = Object.entries(charsOccurs)
+    .filter(([_char, occurrences]) => occurrences > maxRepeatedAllowed)
     .map(([char, _occurrences]) => char);
 
-  const counts = chars.map(char => {
-    switch (char) {
-      case '\\':
-      case ']':
-        char = `\${char}` // escape char in regex
-      break;
-    }
-
-    const re = new RegExp(`[${char}]{${minOccurs},}`, "g");
-    return regexMatchCount(password, re);
-  });
-
-  return counts.filter(Boolean).length;
+  return repeatedChars.length
 }
 
 function length(password: string): number {
@@ -130,43 +121,54 @@ function atMost(count: number, check: Function, password: string): boolean {
   return check(password) <= count;
 }
 
-function withFeedback(check: Function, feedback = 'feedback') {
+function withSuggestion(check: Function, suggestion = 'suggestion'): string {
   if (!check()) {
-    return feedback
+    return suggestion
+  } else {
+    return ''
   }
 }
 
-function complexityFeedback(password: string): Array<string|undefined> {
-  const checks = [
-    withFeedback(() => atLeast(1, upperCaseCharCount, password), 'at least 1 upper case character'),
-    withFeedback(() => atLeast(1, lowerCaseCharCount, password), 'at least 1 lower case character'),
-    withFeedback(() => atLeast(1, digitCount, password), 'at least 1 digit'),
-    withFeedback(() => atLeast(1, specialCharCount, password), 'at least 1 special characater')
+function provideFeedback(password: string): HardpassFeedback {
+  const complexitySuggestions = [
+    withSuggestion(() => atLeast(1, upperCaseCharCount, password), 'Try adding at least 1 upper case character'),
+    withSuggestion(() => atLeast(1, lowerCaseCharCount, password), 'Try adding at least 1 lower case character'),
+    withSuggestion(() => atLeast(1, digitCount, password), 'Try adding at least 1 digit'),
+    withSuggestion(() => atLeast(1, specialCharCount, password), 'Try adding at least 1 special characater')
   ];
+  const additionalSuggestions = [
+    withSuggestion(() => atLeast(10, length, password), 'Must be at least 10 characters long'),
+    withSuggestion(() => atMost(128, length, password), 'Can only be at most 128 characters long'),
+    withSuggestion(() => atMost(0, repeatedIdenticalCharCount, password), 'Cannot have any repeated identical characters')
+  ]
+  let suggestions: Array<string> = []
+  let warnings: Array<string> = []
 
-  return checks.filter(Boolean)
+  if (complexitySuggestions.length > 1) { // min complexity requirements == 3/4 checks
+    suggestions = complexitySuggestions
+  }
+
+  if (additionalSuggestions.length > 0) { // all are required
+    suggestions = suggestions.concat(additionalSuggestions)
+  }
+
+  if (suggestions.length > 0) {
+    warnings.push('Not complex enough')
+  }
+
+  return {
+    warning: warnings.join(' and '),
+    suggestions
+  }
 }
 
 export default function hardpass(password: string): HardpassOutput {
-  let feedback = complexityFeedback(password)
-
-  if (feedback.length <= 1) { // min complexity requirements == 3/4 checks
-    feedback = [] // clear feedback if we meed complexity requirements
-  }
-
-  const checks = [
-    withFeedback(() => atLeast(10, length, password), 'at least 10 characters long'),
-    withFeedback(() => atMost(128, length, password), 'at most 128 characters long'),
-    withFeedback(() => atMost(0, repeatedIdenticalCharCount, password), 'no repeated identical characters')
-  ];
-
-  const score = checks.length == 0 ? 4 : 1
+  const feedback = provideFeedback(password)
+  const isStrong = !!feedback.warning
+  const score = isStrong ? 4 : 0 // we're either weak:0 or strong:4
 
   return {
     score,
-    feedback: {
-      warning: '',
-      suggestions: feedback
-    }
+    feedback
   }
 }

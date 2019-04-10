@@ -34,9 +34,9 @@ hardpass('Cm;cF*1f5L');
 
 ## policies
 
-Inspired by [OWASP Proper Password Strenth Controls][npm-url].
+Inspired by [OWASP Proper Password Strenth Controls][owasp-url].
 
-[owasp-url]: https://www.owasp.org/index.php/Authentication_Cheat_Sheet#Implement_Proper_Password_Strength_Controls
+[owasp-url]: https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Authentication_Cheat_Sheet.md#implement-proper-password-strength-controls
 
 ### implemented
 
