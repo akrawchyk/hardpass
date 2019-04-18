@@ -14,7 +14,8 @@
   },
   "files": [
     "dist/*.js",
-    "dist/*.d.ts"
+    "dist/*.d.ts",
+    "dist/*.map"
   ],
   "keywords": [],
   "author": "Andrew Krawchyk <akrawchyk@gmail.com> (https://github.com/akrawchyk)",

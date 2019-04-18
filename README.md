@@ -92,4 +92,4 @@ provide different configurations for file-size tradeoffs.
 
 [MIT © Andrew Krawchyk][license-url]
 
-[license-url]: https://github.com/akrawchyk/hardpass/blob/master/LICENSE.txt
+[license-url]: https://github.com/akrawchyk/hardpass/blob/master/LICENSE.md
