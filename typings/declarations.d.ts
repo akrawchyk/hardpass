@@ -1,1 +1,1 @@
-declare function hardpass(password: string): boolean;
+declare module 'hardpass'

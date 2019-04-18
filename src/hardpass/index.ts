@@ -89,7 +89,7 @@ function provideFeedback(password: string): HardpassFeedback {
     withSuggestion(() => atLeast(1, upperCaseCharCount, password), 'Try adding at least 1 upper case character'),
     withSuggestion(() => atLeast(1, lowerCaseCharCount, password), 'Try adding at least 1 lower case character'),
     withSuggestion(() => atLeast(1, digitCount, password), 'Try adding at least 1 digit'),
-    withSuggestion(() => atLeast(1, specialCharCount, password), 'Try adding at least 1 special characater')
+    withSuggestion(() => atLeast(1, specialCharCount, password), 'Try adding at least 1 special character')
   ].filter(Boolean);
   // prettier-ignore
   const additionalSuggestions = [

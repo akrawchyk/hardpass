@@ -10,4 +10,4 @@ export interface HardpassOutput {
   feedback?: HardpassFeedback;
 }
 
-export function hardpass(password: string): boolean;
+export function hardpass(password: string): HardpassOutput;
