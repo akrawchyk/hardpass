@@ -1,7 +1,9 @@
-# hardpass [![npm][npm-image]][npm-url]
+# hardpass [![npm][npm-image]][npm-url] [![CircleCI][circleci-image]][circleci-url]
 
 [npm-image]: https://img.shields.io/npm/v/hardpass.svg
 [npm-url]: https://npmjs.org/package/hardpass
+[circleci-image]: https://circleci.com/gh/akrawchyk/hardpass.svg?style=shield
+[circleci-url]: https://circleci.com/gh/akrawchyk/hardpass
 
 Lightweight password strength checker that enforces a strong password policy.
 
