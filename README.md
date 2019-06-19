@@ -9,7 +9,7 @@ Lightweight password strength checker that enforces a strong password policy.
 
 ## features
 
-* [\>99% smaller than zxcvbn](#motivation), just 2.2K gzipped, 6.7K uncompressed.
+* [\>99% smaller than zxcvbn](#motivation), just 2.4K gzipped, 7.1K uncompressed.
 * Feedback messages for weak passwords
 * Familiar API
 
@@ -70,11 +70,13 @@ Inspired by [OWASP Proper Password Strenth Controls][owasp-url].
     * at least 1 special character (punctuation) — ` !"#$%&'()*+,-./:;<=>?@[\\\]^_\`{|}~`
   * not more than 2 identical characters in a row (e.g., 111 not allowed)
 * Feedback messages
+* Password Topologies
+  * [Ban commonly used password topologies][korelogic-url]
+
+[korelogic-url]: https://blog.korelogic.com/blog/2014/04/04/pathwell_topologies
 
 ### planned
 
-* Password Topologies
-  * Ban commonly used password topologies
 * Configurable feedback messages
 * Configurable password dictionaries
 
