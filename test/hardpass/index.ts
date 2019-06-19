@@ -95,6 +95,13 @@ test(
   weakOutput(['Try adding at least 1 digit', 'Try adding at least 1 special character'])
 );
 
+test(
+  'banned topology',
+  output,
+  'Ulsdgw5634#',
+  weakOutput(['Cannot use that password, it matches a banned topology'])
+)
+
 // strong
 
 test('password length lower bound', output, 'Cm;cF*1f5L', strongOutput());
