@@ -67,7 +67,7 @@ test(
   '12cx489fwi',
   weakOutput([
     'Try adding at least 1 upper case character',
-    'Try adding at least 1 special characater'
+    'Try adding at least 1 special character'
   ])
 );
 
@@ -84,7 +84,7 @@ test(
   '12B483GWRC',
   weakOutput([
     'Try adding at least 1 lower case character',
-    'Try adding at least 1 special characater'
+    'Try adding at least 1 special character'
   ])
 );
 
@@ -92,7 +92,7 @@ test(
   'no digits, no specials',
   output,
   'SWgsXLejJu',
-  weakOutput(['Try adding at least 1 digit', 'Try adding at least 1 special characater'])
+  weakOutput(['Try adding at least 1 digit', 'Try adding at least 1 special character'])
 );
 
 // strong
