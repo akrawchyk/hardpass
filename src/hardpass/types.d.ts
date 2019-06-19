@@ -1,5 +1,9 @@
 export type CharsOccurrences = { [key: string]: number };
 
+export interface HashcatTopologyMap {
+  [key:string]: string
+}
+
 export interface HardpassFeedback {
   warning: string;
   suggestions: Array<string>;
