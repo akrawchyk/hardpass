@@ -1,8 +1,17 @@
 import { CharsOccurrences, HashcatTopologyMap, HardpassFeedback, HardpassOutput } from './types';
 
+// accept hashcat topology and match against password
+// see https://hashcat.net/wiki/doku.php?id=mask_attack
 const SPECIAL_CHARS_PATTERN = '[ !"#$%&\'()*+,-./:;<=>?@\[\\\]^_`{|}~]'
 const SPECIAL_CHARS_RE = new RegExp(SPECIAL_CHARS_PATTERN, 'g');
-const BANNED_TOPOLOGIES = [ // removed topologies that wont satisfy hardpass: https://blog.korelogic.com/blog/2014/04/04/pathwell_topologies
+const TOPOLOGY_MAP = {
+  l: '[a-z]',
+  u: '[A-Z]',
+  d: '\\d',
+  s: SPECIAL_CHARS_PATTERN,
+  a: '.'
+} as HashcatTopologyMap;
+const BANNED_TOPOLOGIES_RE = [ // removed topologies that wont satisfy hardpass: https://blog.korelogic.com/blog/2014/04/04/pathwell_topologies
   '?u?l?l?l?l?l?l?l?d?d', '?u?l?l?l?l?l?d?d?d?d', '?u?l?l?l?l?l?l?d?d?d?d',
   '?u?l?l?l?l?l?l?l?l?d?d', '?u?l?l?l?l?l?l?l?l?d', '?u?l?l?l?l?l?d?d?d?d?s',
   '?u?l?l?l?l?l?l?d?d?d', '?u?l?l?l?l?l?l?l?d?d?d?d', '?d?d?u?l?l?l?l?l?l?l',
@@ -13,33 +22,19 @@ const BANNED_TOPOLOGIES = [ // removed topologies that wont satisfy hardpass: ht
   '?u?l?l?l?l?l?d?d?d?s', '?u?l?l?l?l?s?d?d?d?d', '?l?l?l?l?l?l?l?d?d?s',
   '?u?u?u?l?l?l?d?d?d?d', '?u?l?l?l?l?l?s?d?d?d', '?u?l?l?l?l?l?l?l?s?d',
   '?l?l?l?l?l?l?l?l?s?d', '?u?l?l?l?l?l?s?d?d?d?d', '?u?u?d?l?l?l?d?d?d?d'
-];
-
-// accept hashcat topology and match against password
-// see https://hashcat.net/wiki/doku.php?id=mask_attack
-const topoMap = {
-  l: '[a-z]',
-  u: '[A-Z]',
-  d: '\\d',
-  s: SPECIAL_CHARS_PATTERN,
-  a: '.'
-} as HashcatTopologyMap;
-
-function checkTopology(password: string, topology: string): boolean {
-  const topoPattern = topology.split('?')
-    .reduce((pattern, type) => {
-      return pattern.concat(topoMap[type])
-    }, ['^'])
-    .concat('$')
-    .join('')
-  const topoRe = new RegExp(topoPattern)
-
-  return topoRe.test(password)
-}
+]
+  .map(topology => {
+    const topoPattern = topology.split('?')
+      .reduce((pattern, type) => {
+        return pattern.concat(TOPOLOGY_MAP[type])
+      }, ['^'])
+      .concat('$')
+      .join('')
+    return new RegExp(topoPattern)
+  })
 
 function matchesBannedTopology(password: string) {
-  const matchingBannedTopologies = BANNED_TOPOLOGIES.filter(topo => topo.replace(/\?/g, '').length === password.length);
-  return matchingBannedTopologies.some(topo => checkTopology(password, topo));
+  return BANNED_TOPOLOGIES_RE.some(re => re.test(password));
 }
 
 function regexMatchCount(password: string, re: RegExp): number {
