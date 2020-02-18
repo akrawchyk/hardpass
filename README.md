@@ -12,7 +12,7 @@ Lightweight password strength checker that enforces a strong password policy.
 * [\>99% smaller than zxcvbn](#motivation): just 2.0K gzipped, 4.8K minified, 8.7K uncompressed
 * Feedback messages for weak passwords
 * Familiar API
-* Easy to (use with React)[https://github.com/akrawchyk/react-use-hardpass]
+* Easy to [use with React](https://github.com/akrawchyk/react-use-hardpass)
 
 ## install
 
